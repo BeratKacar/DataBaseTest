@@ -1,0 +1,40 @@
+import sqlite3
+import tkinter as tk
+from tkinter import ttk
+
+# Database connection and data retrieval
+def fetch_data():
+    connection = sqlite3.connect("dataBase.db")
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM numbers")  # Tüm verileri al
+    numbers = cursor.fetchall()  # Verileri liste olarak al
+    connection.close()
+    return numbers
+
+# Create Tkinter GUI
+def show_data():
+    # Create Tkinter window 
+    root = tk.Tk()
+    root.title("DataBases Datas")
+    root.geometry("400x300")
+
+    # Create table
+    tree = ttk.Treeview(root, columns=("ID", "Sayı", "Kelime"), show="headings")
+    tree.heading("ID", text="ID")
+    tree.heading("Sayı", text="Sayı")
+    tree.heading("Kelime", text="Kelime")
+    tree.pack(fill=tk.BOTH, expand=True)
+
+    # Veritabanındaki verileri al
+    numbers = fetch_data()
+
+    # Verileri tabloya ekle
+    for data in numbers:
+        tree.insert("", tk.END, values = data)
+
+    # Arayüzü başlat
+    root.mainloop()
+
+# Ana fonksiyon
+if __name__ == "__main__":
+    show_data()
